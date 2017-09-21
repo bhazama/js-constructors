@@ -15,7 +15,7 @@
   this.cost = cost;
   this.description = description;
  };
- Spell.prototype.getDetails = function(){
+ this.Spell.prototype.getDetails = function(){
   return this.name + ", " + this.cost + ", " +  this.description;
  };
   /**
@@ -55,8 +55,8 @@
 
   Spell.call(this,name,cost,description);
  };
- DamageSpell.prototype = Object.create(Spell.prototype);
- DamageSpell.prototype.constructor = DamageSpell;
+ this.DamageSpell.prototype = Object.create(this.Spell.prototype);
+ this.DamageSpell.prototype.constructor = this.DamageSpell;
 /**
  * Now that you've created some spells, let's create
  * `Spellcaster` objects that can use them!
@@ -97,24 +97,36 @@
   };
 
   this.invoke = function(spell,target){
-    if(spell instanceof Spell || spell instanceof DamageSpell){
-
-      if(spell instanceof DamageSpell){
-      target = SpellCaster;
+    if(spell instanceof Spell === false){
+      return false;
+    }
+    if(spell instanceof DamageSpell){
+      if(target instanceof Spellcaster && this.mana > spell.cost){
+        this.spendMana(spell.cost);
+        target.inflictDamage(spell.damage);
+        return true;
+      }
     }else{
       return false;
     }
-  }
 
+    if(spell instanceof Spell){
+      if(this.mana >= spell.cost){
+        this.spendMana(spell.cost);
+        return true;
+      }else{
+        return false;
+      }
+    }
+
+
+  };
 
 };
 
 
-
-
-
- };
-  /**
+var gandalf = new this.Spellcaster("Gandalf", 100, 100);
+console.log(gandalf.inflictDamage(50));  /**
    * @method inflictDamage
    *
    * The spellcaster loses health equal to `damage`.
