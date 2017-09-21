@@ -10,7 +10,14 @@
  * @property {string} description
  * @method   getDetails
  */
-
+ this.Spell = function(name,cost,description){
+  this.name = name;
+  this.cost = cost;
+  this.description = description;
+ };
+ Spell.prototype.getDetails = function(){
+  return this.name + ", " + this.cost + ", " +  this.description;
+ };
   /**
    * Returns a string of all of the spell's details.
    * The format doesn't matter, as long as it contains the spell name, cost, and description.
@@ -43,7 +50,13 @@
  * @property {number} damage
  * @property {string} description
  */
+ this.DamageSpell = function(name,cost,damage,description){
+  this.damage = damage;
 
+  Spell.call(this,name,cost,description);
+ };
+ DamageSpell.prototype = Object.create(Spell.prototype);
+ DamageSpell.prototype.constructor = DamageSpell;
 /**
  * Now that you've created some spells, let's create
  * `Spellcaster` objects that can use them!
@@ -60,7 +73,47 @@
  * @method  spendMana
  * @method  invoke
  */
+ this.Spellcaster = function(name,health,mana){
+  this.name = name;
+  this.health = health;
+  this.mana = mana;
+  this.isAlive = true;
 
+  this.inflictDamage = function(damage){
+    this.health -= damage;
+    if(this.health <= 0){
+      this.health = 0;
+      this.isAlive = false;
+    }
+  };
+
+  this.spendMana = function(cost){
+    if(this.mana < cost){
+      return false;
+    }else{
+      this.mana -= cost;
+      return true;
+    }
+  };
+
+  this.invoke = function(spell,target){
+    if(spell instanceof Spell || spell instanceof DamageSpell){
+
+      if(spell instanceof DamageSpell){
+      target = SpellCaster;
+    }else{
+      return false;
+    }
+  }
+
+
+};
+
+
+
+
+
+ };
   /**
    * @method inflictDamage
    *
